@@ -84,16 +84,6 @@ services:
     ports:
       - "5432:5432"
 
-  mysql:
-    image: mysql:9.0
-    volumes:
-      - ./BaseContagemMySql.sql:/docker-entrypoint-initdb.d/1-basecontagem.sql
-    environment:
-      MYSQL_ROOT_PASSWORD: "MySql2024!"
-      MYSQL_DATABASE: "basecontagem"
-    ports:
-      - "3306:3306"
-
   rabbitmq:
     image: rabbitmq:3-management
     ports:
