@@ -1,0 +1,4 @@
+@APIContagem_HostAddress = http://localhost:5259
+
+GET {{APIContagem_HostAddress}}/contador/
+Accept: application/json

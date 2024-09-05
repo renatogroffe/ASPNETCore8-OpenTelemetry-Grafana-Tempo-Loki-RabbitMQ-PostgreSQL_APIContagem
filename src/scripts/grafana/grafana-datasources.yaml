@@ -1,0 +1,55 @@
+apiVersion: 1
+
+datasources:
+- name: Tempo
+  type: tempo
+  access: proxy
+  orgId: 1
+  url: http://tempo:3200
+  basicAuth: false
+  isDefault: true
+  version: 1
+  editable: false
+  apiVersion: 1
+  uid: tempo
+  jsonData:
+    httpMethod: GET
+    serviceMap:
+      datasourceUid: prometheus
+    tracesToLogsV2:
+      # Field with an internal link pointing to a logs data source in Grafana.
+      # datasourceUid value must match the uid value of the logs data source.
+      datasourceUid: 'Loki'
+      spanStartTimeShift: '-1h'
+      spanEndTimeShift: '1h'
+      filterByTraceID: true
+      filterBySpanID: true
+      customQuery: false
+      query: 'method="$${__span.tags.method}"'
+- name: Prometheus
+  type: prometheus
+  uid: prometheus
+  access: proxy
+  orgId: 1
+  url: http://prometheus:9090
+  basicAuth: false
+  isDefault: false
+  version: 1
+  editable: false
+  jsonData:
+    httpMethod: GET
+- name: Loki
+  type: loki
+  access: proxy 
+  orgId: 1
+  url: http://loki:3100
+  basicAuth: false
+  isDefault: false
+  version: 1
+  editable: false
+  jsonData:
+    derivedFields:
+      - datasourceUid: tempo
+        matcherRegex: tid=(\w+)
+        name: TraceId
+        url: $${__value.raw}
